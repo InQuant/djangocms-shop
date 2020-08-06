@@ -2,9 +2,6 @@
 from setuptools import setup, find_packages
 import shop
 
-with open('README.md', 'r') as fh:
-    long_description = fh.read()
-
 REQUIREMENTS = [
     'Django>=2.1,<3.1',
     'django-filer>=1.7',
@@ -12,11 +9,11 @@ REQUIREMENTS = [
     'django-fsm>=2.7',
     'django-fsm-admin',
     'djangorestframework>=3.9,<4',
-    'django-rest-auth',
+    # 'django-rest-auth',
     'Django-Select2',
     'django-admin-sortable2',
-    'django-formtools',
-    'django_polymorphic',
+    # 'django-formtools',
+    # 'django_polymorphic',
     'django-post_office',
     'django-cms>=3.7',
 ]
@@ -45,7 +42,7 @@ setup(
     name="djangocms-shop",
     version=shop.__version__,
     description="A RESTful e-commerce framework based on DjangoCMS",
-    long_description=long_description,
+    long_description='',
     long_description_content_type='text/markdown',
     url='',
     license='BSD License',
