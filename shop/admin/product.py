@@ -37,9 +37,9 @@ class CategoryModelMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         if Site.objects.count() >=2 :
             page_sitename=str(Site.objects.filter(djangocms_nodes=obj.node_id).first().name)
-            return '{} | {}'.format(str(obj), page_sitename)
+            return '{} | {}'.format(str(obj.get_absolute_url()), page_sitename)
         else:
-            return str(obj)
+            return str(obj.get_absolute_url())
 
 
 class CMSPageAsCategoryMixin:
