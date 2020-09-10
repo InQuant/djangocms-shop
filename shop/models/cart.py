@@ -12,6 +12,9 @@ from shop.models.product import BaseProduct
 from shop.modifiers.pool import cart_modifiers_pool
 from shop.money import Money
 
+import logging
+logger = logging.getLogger('shop')
+
 
 class CartItemManager(models.Manager):
     """
@@ -62,7 +65,7 @@ class CartItemManager(models.Manager):
         return watch_items
 
 
-class BaseCartItem(models.Model, metaclass=deferred.ForeignKeyBuilder):
+class BaseCartItem(models.Model, metaclass=deferred.ForeignKeyBuilder):  # noqa
     """
     This is a holder for the quantity of items in the cart and, obviously, a
     pointer to the actual Product being purchased
@@ -141,6 +144,7 @@ class BaseCartItem(models.Model, metaclass=deferred.ForeignKeyBuilder):
         for modifier in cart_modifiers_pool.get_all_modifiers():
             modifier.process_cart_item(self, request)
         self._dirty = False
+
 
 CartItemModel = deferred.MaterializedModel(BaseCartItem)
 
@@ -246,7 +250,11 @@ class BaseCart(models.Model, metaclass=deferred.ForeignKeyBuilder):
         for item in items:
             # item.update iterates over all cart modifiers and invokes method `process_cart_item`
             item.update(request)
-            self.subtotal += item.line_total
+            try:
+                self.subtotal += item.line_total
+            except Exception as e:
+                logger.error('no attribute line_total in cart_item, try to connect a e.g. DefaultCartModifier')
+                raise
 
         # Iterate over the registered modifiers, to process the cart's summary
         for modifier in cart_modifiers_pool.get_all_modifiers():
@@ -324,5 +332,6 @@ class BaseCart(models.Model, metaclass=deferred.ForeignKeyBuilder):
     def get_default_caption_data(cls):
         warnings.warn("This method is deprecated")
         return {'num_items': 0, 'total_quantity': 0, 'subtotal': Money(), 'total': Money()}
+
 
 CartModel = deferred.MaterializedModel(BaseCart)
