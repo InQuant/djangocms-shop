@@ -1,0 +1,18 @@
+{% load i18n %}
+<div>
+  {% if instance.glossary.is_editable %}
+  <button type="button" class="btn-sm btn-info float-right">
+    <span class="fas fa-edit mr-2"></span>{% trans "Change" %}
+  </button>
+  {% endif %}
+  <h4>{% trans "Payment" %}</h4>
+  <p class="form-check">
+    <input class="form-check-input" type="checkbox" value="1" checked disabled id="invoice_payment">
+    <label class="form-check-label" for="invoice_payment">
+      {% trans "per" %} {% trans "Invoice" %}
+    </label>
+  </p>
+  <div>{% trans "Billing Address" %}:</div>
+  <address>{% include "zp_shop/address.txt" with separator=" ・ " %}</address>
+</div>
+<hr>

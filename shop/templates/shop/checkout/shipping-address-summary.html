@@ -1,5 +1,11 @@
 {% load i18n %}
 <div>
-  <h4>{% trans "Shipping Address " %}</h4>
-  <address>{% include "zp_shop/address.txt" %}</address>
+  {% if instance.glossary.is_editable %}
+  <button type="button" class="btn-sm btn-info float-right">
+    <span class="fas fa-edit mr-2"></span>{% trans "Change" %}
+  </button>
+  {% endif %}
+  <h4>{% trans "Shipping Address" %}</h4>
+  <address>{% include "zp_shop/address.txt" with separator=" ・ " %}</address>
 </div>
+<hr>

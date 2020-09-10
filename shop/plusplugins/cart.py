@@ -17,7 +17,7 @@ from shop.serializers.cart import CartSerializer
 class ShopCartPluginForm(PlusPluginFormBase):
     CHOICES = [
         ('editable', _("Editable Cart")),
-        # ('static', _("Static Cart")),
+        ('static', _("Static Cart")),
         # ('summary', _("Cart Summary")),
         #  ('watch', _("Watch List")),
     ]

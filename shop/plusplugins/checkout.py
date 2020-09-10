@@ -77,3 +77,36 @@ class CheckoutShippingAddressPlugin(StylePluginMixin, PlusPluginBase):
 
 
 plugin_pool.register_plugin(CheckoutShippingAddressPlugin)
+
+
+class CheckoutPaymentPluginForm(PlusPluginFormBase):
+    is_editable = fields.BooleanField(label=_('Is Editable'), initial=True)
+
+    STYLE_CHOICES = 'SHOP_PAYMENT_STYLES'
+    extra_style, extra_classes, label, extra_css = get_style_form_fields(STYLE_CHOICES)
+
+
+class CheckoutPaymentPlugin(StylePluginMixin, PlusPluginBase):
+    name = _('Checkout Payment')
+    module = _('Shop')
+    cache = False
+    allow_children = True
+    form = CheckoutPaymentPluginForm
+    render_template = 'shop/checkout/payment.html'
+
+    def render(self, context, instance, placeholder):
+        try:
+            cart = CartModel.objects.get_from_request(context['request'])
+            context['is_cart_filled'] = cart.items.exists()
+            context['address'] = cart.billing_address or cart.shipping_address
+
+            # update context for static cart with items to be endered as HTML
+            cart_serializer = CartSerializer(cart, context=context, label='cart', with_items=True)
+            context['cart'] = cart_serializer.data
+
+        except (KeyError, CartModel.DoesNotExist):
+            pass
+        return super().render(context, instance, placeholder)
+
+
+plugin_pool.register_plugin(CheckoutPaymentPlugin)
