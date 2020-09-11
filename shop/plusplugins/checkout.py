@@ -3,8 +3,6 @@ from django.template import TemplateDoesNotExist
 from django.template.loader import select_template, get_template
 from django.utils.translation import gettext_lazy as _
 
-from cms.plugin_pool import plugin_pool
-
 from cmsplus.forms import PlusPluginFormBase, get_style_form_fields
 from cmsplus.plugin_base import StylePluginMixin, PlusPluginBase
 
@@ -76,9 +74,6 @@ class CheckoutShippingAddressPlugin(StylePluginMixin, PlusPluginBase):
         return super().render(context, instance, placeholder)
 
 
-plugin_pool.register_plugin(CheckoutShippingAddressPlugin)
-
-
 class CheckoutPaymentPluginForm(PlusPluginFormBase):
     is_editable = fields.BooleanField(label=_('Is Editable'), initial=True)
 
@@ -107,6 +102,3 @@ class CheckoutPaymentPlugin(StylePluginMixin, PlusPluginBase):
         except (KeyError, CartModel.DoesNotExist):
             pass
         return super().render(context, instance, placeholder)
-
-
-plugin_pool.register_plugin(CheckoutPaymentPlugin)

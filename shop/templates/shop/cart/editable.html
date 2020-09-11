@@ -20,8 +20,11 @@
 
 {% block shop-cart-body %}
 	<div class="shop-list-item row border-top py-2" shop-cart-item ng-repeat="cart_item in cart.items">
-		<div class="col-12 col-md-6" ng-bind-html="cart_item.summary.media">
-			{# rendered by ProductSerializer using template "(myshop|shop)/products/cart-{product_model}-media.html" #}
+    <div class="col-12 col-md-6">
+      <div ng-bind-html="cart_item.summary.media">
+			  {# rendered by ProductSerializer using template "(myshop|shop)/products/cart-{product_model}-media.html" #}
+      </div>
+      {% block shop-cart-item-extra %}{% endblock %}
 		</div>
 		<div class="col-12 col-md-6">
 			<div class="row align-items-center">
