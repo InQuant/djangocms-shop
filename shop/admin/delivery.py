@@ -63,7 +63,7 @@ class OrderItemInlineDelivery(OrderItemInline):
     def get_fields(self, request, obj=None):
         fields = list(super().get_fields(request, obj))
         if obj:
-            if obj.status == 'pick_goods' and obj.unfulfilled_items > 0:
+            if obj.status == 'goods_picked' and obj.unfulfilled_items > 0:
                 fields[1] += ('deliver_quantity', 'canceled',)
             else:
                 fields[1] += ('get_delivered', 'show_ready',)
@@ -72,7 +72,7 @@ class OrderItemInlineDelivery(OrderItemInline):
     def get_readonly_fields(self, request, obj=None):
         readonly_fields = list(super().get_readonly_fields(request, obj))
         if obj:
-            if not (obj.status == 'pick_goods' and obj.unfulfilled_items > 0):
+            if not (obj.status == 'goods_picked' and obj.unfulfilled_items > 0):
                 readonly_fields.extend(['get_delivered', 'show_ready'])
         return readonly_fields
 
@@ -84,7 +84,7 @@ class OrderItemInlineDelivery(OrderItemInline):
         attrs = models.fields_for_model(obj.items.model, fields=['quantity'], labels=labels)
         # rename to deliver_quantity, since quantity is already used
         attrs['deliver_quantity'] = attrs.pop('quantity')
-        if obj.status == 'pick_goods' and obj.unfulfilled_items > 0:
+        if obj.status == 'goods_picked' and obj.unfulfilled_items > 0:
             attrs['deliver_quantity'].widget.attrs.update(style='width: 50px;')
         else:
             attrs['deliver_quantity'].required = False
@@ -151,13 +151,13 @@ class DeliveryInline(admin.TabularInline):
 
     def get_readonly_fields(self, request, obj=None):
         readonly_fields = list(super().get_readonly_fields(request, obj))
-        if not app_settings.SHOP_OVERRIDE_SHIPPING_METHOD or obj.status == 'ready_for_delivery':
+        if not app_settings.SHOP_OVERRIDE_SHIPPING_METHOD or obj.status == 'order_shipped':
             readonly_fields.append('shipping_method')
         return readonly_fields
 
     def get_formset(self, request, obj=None, **kwargs):
         formset = super().get_formset(request, obj, **kwargs)
-        if not app_settings.SHOP_OVERRIDE_SHIPPING_METHOD or obj.status == 'ready_for_delivery':
+        if not app_settings.SHOP_OVERRIDE_SHIPPING_METHOD or obj.status == 'order_shipped':
             # make readonly field optional
             formset.form.base_fields['shipping_method'].required = False
         return formset
@@ -225,7 +225,8 @@ class DeliveryOrderAdminMixin:
             if obj.allow_partial_delivery:
                 # replace `OrderItemInline` by `OrderItemInlineDelivery` for that instance.
                 inline_instances = [
-                    OrderItemInlineDelivery(self.model, self.admin_site) if isinstance(instance, OrderItemInline) else instance
+                    OrderItemInlineDelivery(
+                        self.model, self.admin_site) if isinstance(instance, OrderItemInline) else instance
                     for instance in inline_instances
                 ]
             inline_instances.append(DeliveryInline(self.model, self.admin_site))
@@ -233,6 +234,6 @@ class DeliveryOrderAdminMixin:
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
-        if form.instance.status == 'pack_goods' and 'status' in form.changed_data:
+        if form.instance.status == 'goods_packed' and 'status' in form.changed_data:
             orderitem_formset = [fs for fs in formsets if issubclass(fs.model, OrderItemModel)][0]
             form.instance.update_or_create_delivery(orderitem_formset.cleaned_data)

@@ -1,0 +1,15 @@
+{% load static sekizai_tags %}
+
+{% addtoblock "js" %}<script src="{% static 'shop/js/checkout.js' %}" type="text/javascript"></script>{% endaddtoblock %}
+{% addtoblock "js" %}
+<script type="text/javascript">
+    ANGULAR_APP_DEPENDENCIES.push('django.shop.checkout');
+</script>
+{% endaddtoblock "js" %}
+
+<div ng-controller="checkoutPurchaseCtrl" class="d-flex justify-content-end py-3">
+  <a href class="{{ instance.css_classes }} btn btn-primary" role="button"
+    ng-click="purchaseNow('{% url 'shop:checkout-purchase' %}')">
+    <i class="icon-logout">&nbsp;</i>{{ instance.glossary.button_text }}
+  </a>
+</div>

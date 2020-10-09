@@ -50,12 +50,13 @@ class ShopCartPlugin(StylePluginMixin, PlusPluginBase):
             return get_template(render_template)
         render_type = instance.glossary.get('render_type')
         try:
-            return select_template([
+            t = select_template([
                 '{}/cart/{}.html'.format(app_settings.APP_LABEL, render_type),
                 'shop/cart/{}.html'.format(render_type),
             ])
         except TemplateDoesNotExist:
-            return get_template('shop/cart/editable.html')
+            t = get_template('shop/cart/editable.html')
+        return t
 
     def render(self, context, instance, placeholder):
         try:

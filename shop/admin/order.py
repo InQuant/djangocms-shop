@@ -69,7 +69,7 @@ class OrderItemInline(admin.StackedInline):
         ('quantity',),
         'render_as_html_extra',
     ]
-    readonly_fields = ['product_code', 'quantity', 'unit_price', 'line_total', 'render_as_html_extra']
+    readonly_fields = ['product_code', 'unit_price', 'line_total', 'quantity', 'render_as_html_extra']
     template = 'shop/admin/edit_inline/stacked-order.html'
 
     def has_add_permission(self, request, obj=None):
@@ -114,11 +114,11 @@ class BaseOrderAdmin(FSMTransitionMixin, admin.ModelAdmin):
     date_hierarchy = 'created_at'
     inlines = [OrderItemInline]
     readonly_fields = ['get_number', 'status_name', 'get_total', 'get_subtotal',
-                       'get_customer_link', 'get_outstanding_amount', 'created_at', 'updated_at',
+                       'get_outstanding_amount', 'created_at', 'updated_at',
                        'render_as_html_extra', 'stored_request', 'is_fully_paid']
     fields = ['get_number', 'status_name',
               ('created_at', 'updated_at'),
-              'get_customer_link',
+              'customer',
               ('get_subtotal', 'get_total', 'get_outstanding_amount', 'is_fully_paid'),
               'render_as_html_extra', 'stored_request']
     actions = None
@@ -241,7 +241,7 @@ class PrintInvoiceAdminMixin:
         return HttpResponse(content)
 
     def print_out(self, obj):
-        if obj.status in ['ready_for_delivery']:
+        if obj.status in ['order_shipped']:
             link = reverse('admin:print_invoice', args=(obj.id,)), pgettext_lazy('admin', "Invoice")
             return format_html(
                 '<span class="object-tools"><a href="{0}" class="viewsitelink" target="_new">{1}</a></span>',

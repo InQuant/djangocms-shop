@@ -26,7 +26,7 @@ class CustomerInlineAdmin(CustomerInlineAdminBase):
     get_billing_addresses.short_description = _("Billing")
 
 
-@admin.register(CustomerProxy)
+# @admin.register(CustomerProxy)
 class CustomerAdmin(CustomerAdminBase):
     class Media:
         css = {'all': ['shop/css/admin/customer.css']}

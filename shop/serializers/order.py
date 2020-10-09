@@ -42,7 +42,7 @@ class OrderDetailSerializer(OrderListSerializer):
     extra = serializers.DictField(read_only=True)
     amount_paid = MoneyField(read_only=True)
     outstanding_amount = MoneyField(read_only=True)
-    cancelable = serializers.BooleanField(read_only=True)
+    can_be_canceled = serializers.BooleanField(read_only=True)
 
     is_partially_paid = serializers.SerializerMethodField(
         method_name='get_partially_paid',
@@ -95,7 +95,7 @@ class OrderDetailSerializer(OrderListSerializer):
         if validated_data['reorder'] is True:
             cart = CartModel.objects.get_from_request(self.context['request'])
             order.readd_to_cart(cart)
-        if validated_data['cancel'] is True and order.cancelable():
+        if validated_data['cancel'] is True and order.can_be_canceled():
             order.cancel_order()
             order.save(with_notification=True)
         return order

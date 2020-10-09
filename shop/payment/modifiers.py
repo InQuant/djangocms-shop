@@ -1,14 +1,14 @@
 from django.utils.translation import gettext_lazy as _
 
 from shop.modifiers.base import BaseCartModifier
-from shop.payment.providers import PaymentProvider, ForwardFundPayment
+from shop.payment.providers import PaymentProvider, ForwardFundPayment, InvoicePaymentProvider
 
 
 class PaymentModifier(BaseCartModifier):
     """
-    Base class for all payment modifiers. The purpose of a payment modifier is to calculate the payment surcharge and/or
-    prevent its usage, in case the choosen payment method is not available for the given customer. The merchant may
-    either append a single payment modifier to the list of ``SHOP_CART_MODIFIERS``, or create a sublist of payment
+    Base class for all payment modifiers. The purpose of a payment modifier is to calculate the payment surcharge
+    and/or prevent its usage, in case the choosen payment method is not available for the given customer. The merchant
+    may either append a single payment modifier to the list of ``SHOP_CART_MODIFIERS``, or create a sublist of payment
     modifier and append this sublist to ``SHOP_CART_MODIFIERS``. The latter is useful to instantiate the same payment
     modifier multiple times for different payment service providers using the same interface.
 
@@ -82,3 +82,14 @@ class PayInAdvanceModifier(PaymentModifier):
 
     def get_choice(self):
         return (self.payment_provider.namespace, _("Pay in advance"))
+
+
+class PayPerInvoiceModifier(PaymentModifier):
+    """
+    This modifiers has no influence on the cart final. It can be used,
+    to enable the customer to pay the products on delivery.
+    """
+    payment_provider = InvoicePaymentProvider()
+
+    def get_choice(self):
+        return (self.payment_provider.namespace, _("Pay per invoice"))

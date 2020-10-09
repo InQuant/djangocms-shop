@@ -135,7 +135,7 @@ class WorkflowMixinMetaclass(deferred.ForeignKeyBuilder):
         return result
 
 
-class BaseOrder(models.Model, metaclass=WorkflowMixinMetaclass):
+class BaseOrder(models.Model, metaclass=WorkflowMixinMetaclass):  # noqa: E999
     """
     An Order is the "in process" counterpart of the shopping cart, which freezes the state of the
     cart on the moment of purchase. It also holds stuff like the shipping and billing addresses,
@@ -208,6 +208,12 @@ class BaseOrder(models.Model, metaclass=WorkflowMixinMetaclass):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        if '_subtotal' not in kwargs:
+            self._subtotal = Decimal(0)
+        if '_total' not in kwargs:
+            self._total = Decimal(0)
+        if 'currency' not in kwargs:
+            self.currency = 'EUR'
         self.logger = logging.getLogger('shop.order')
 
     def __str__(self):
@@ -367,11 +373,11 @@ class BaseOrder(models.Model, metaclass=WorkflowMixinMetaclass):
         """
         self.logger.info("Acknowledge payment by user %s", by)
 
-    def cancelable(self):
+    def can_be_canceled(self):
         """
         A hook method to be overridden by mixin classes managing Order cancellations.
 
-        :returns: ``True`` if the current Order is cancelable.
+        :returns: ``True`` if the current Order can be canceled.
         """
         return False
 
@@ -406,6 +412,7 @@ class BaseOrder(models.Model, metaclass=WorkflowMixinMetaclass):
         return self._transition_targets.get(self.status, self.status)
 
     status_name.short_description = pgettext_lazy('order_models', "State")
+
 
 OrderModel = deferred.MaterializedModel(BaseOrder)
 
@@ -553,7 +560,7 @@ class BaseOrderItem(models.Model, metaclass=deferred.ForeignKeyBuilder):
         cart_item.product.deduct_from_stock(cart_item.quantity, **kwargs)
         self.product = cart_item.product
         # for historical integrity, store the product's name and price at the moment of purchase
-        self.product_name = cart_item.product.product_name
+        self.product_name = cart_item.product.name
         self.product_code = cart_item.product_code
         self._unit_price = Decimal(cart_item.unit_price)
         self._line_total = Decimal(cart_item.line_total)
@@ -569,5 +576,6 @@ class BaseOrderItem(models.Model, metaclass=deferred.ForeignKeyBuilder):
         self._unit_price = BaseOrder.round_amount(self._unit_price)
         self._line_total = BaseOrder.round_amount(self._line_total)
         super().save(*args, **kwargs)
+
 
 OrderItemModel = deferred.MaterializedModel(BaseOrderItem)

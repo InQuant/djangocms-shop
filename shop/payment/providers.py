@@ -1,4 +1,3 @@
-from django.core.exceptions import ImproperlyConfigured
 from shop.models.order import OrderModel
 
 
@@ -30,7 +29,8 @@ class PaymentProvider:
         ```
         since this expression is evaluated inside an AngularJS directive.
         """
-        return 'alert("Please implement method `get_payment_request` in the Python class inheriting from `PaymentProvider`!");'
+        return ('alert("Please implement method `get_payment_request` in the Python class inheriting from '
+                '`PaymentProvider`!");')
 
 
 class ForwardFundPayment(PaymentProvider):
@@ -39,19 +39,26 @@ class ForwardFundPayment(PaymentProvider):
     """
     namespace = 'forward-fund-payment'
 
-    def __init__(self):
-        if (not (callable(getattr(OrderModel, 'no_payment_required', None)) and callable(
-                getattr(OrderModel, 'awaiting_payment', None)))):
-            msg = "Missing methods in Order model. Add 'shop.payment.workflows.ManualPaymentWorkflowMixin' to SHOP_ORDER_WORKFLOWS."
-            raise ImproperlyConfigured(msg)
-        super().__init__()
-
     def get_payment_request(self, cart, request):
         order = OrderModel.objects.create_from_cart(cart, request)
         order.populate_from_cart(cart, request)
         if order.total == 0:
-            order.no_payment_required()
+            order.no_payment_required()  # must be declared in Workflow
         else:
-            order.awaiting_payment()
+            order.awaiting_payment()  # must be declared in Workflow
+        order.save(with_notification=True)
+        return 'window.location.href="{}";'.format(order.get_absolute_url())
+
+
+class InvoicePaymentProvider(PaymentProvider):
+    """
+    Provides a simple pay per invoice payment provider.
+    """
+    namespace = 'invoice-payment'
+
+    def get_payment_request(self, cart, request):
+        order = OrderModel.objects.create_from_cart(cart, request)
+        order.populate_from_cart(cart, request)
+        order.no_payment_required()  # must be declared in Workflow
         order.save(with_notification=True)
         return 'window.location.href="{}";'.format(order.get_absolute_url())

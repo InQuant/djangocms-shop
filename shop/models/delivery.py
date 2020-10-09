@@ -64,7 +64,7 @@ class BaseDelivery(models.Model, metaclass=deferred.ForeignKeyBuilder):
         return errors
 
     def clean(self):
-        if self.order._fsm_requested_transition == ('status', 'ship_goods') and not self.shipped_at:
+        if self.order._fsm_requested_transition == ('status', 'shipping_prepared') and not self.shipped_at:
             shipping_modifier = cart_modifiers_pool.get_active_shipping_modifier(self.shipping_method)
             shipping_modifier.ship_the_goods(self)
 

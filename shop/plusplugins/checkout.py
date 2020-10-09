@@ -27,7 +27,7 @@ class CheckoutShippingAddressPluginForm(PlusPluginFormBase):
         help_text=_("Shall the cart be editable or static or summary?"),
     )
 
-    is_editable = fields.BooleanField(label=_('Is Editable'), initial=True)
+    is_editable = fields.BooleanField(label=_('Is Editable'), initial=True, required=False)
 
     STYLE_CHOICES = 'SHOP_SHIPPING_ADDRESS_STYLES'
     extra_style, extra_classes, label, extra_css = get_style_form_fields(STYLE_CHOICES)
@@ -75,7 +75,7 @@ class CheckoutShippingAddressPlugin(StylePluginMixin, PlusPluginBase):
 
 
 class CheckoutPaymentPluginForm(PlusPluginFormBase):
-    is_editable = fields.BooleanField(label=_('Is Editable'), initial=True)
+    is_editable = fields.BooleanField(label=_('Is Editable'), required=False, initial=False)
 
     STYLE_CHOICES = 'SHOP_PAYMENT_STYLES'
     extra_style, extra_classes, label, extra_css = get_style_form_fields(STYLE_CHOICES)
@@ -102,3 +102,18 @@ class CheckoutPaymentPlugin(StylePluginMixin, PlusPluginBase):
         except (KeyError, CartModel.DoesNotExist):
             pass
         return super().render(context, instance, placeholder)
+
+
+class PurchaseButtonForm(PlusPluginFormBase):
+    button_text = fields.CharField(max_length=255, label=_('Button Text'), required=True, initial=_('Purchase Now'))
+
+    STYLE_CHOICES = 'CHECKOUT_CONFIRM_BUTTON_STYLES'
+    extra_style, extra_classes, label, extra_css = get_style_form_fields(STYLE_CHOICES)
+
+
+class PurchaseButtonPlugin(PlusPluginBase):
+    allow_children = False
+    module = _('Shop')
+    render_template = 'shop/checkout/purchase_button.html'
+    name = 'Purchase Button'
+    form = PurchaseButtonForm

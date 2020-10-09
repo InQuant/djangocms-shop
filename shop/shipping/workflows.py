@@ -19,11 +19,22 @@ class SimpleShippingWorkflowMixin:
     the ordered goods for shipping.
     """
     TRANSITION_TARGETS = {
-        'pick_goods': _("Picking goods"),
-        'pack_goods': _("Packing goods"),
-        'ship_goods': _("Prepare for shipping"),
-        'ready_for_delivery': _("Ready for delivery"),
+        'goods_picked': _("Goods picked"),
+        'goods_packed': _("Goods packed"),
+        'shipping_prepared': _("Shipping prepared"),
+        'order_shipped': _("Shipped"),
+        'order_completed': _("Completed"),
     }
+
+    CANCELABLE_SOURCES = [
+        'new', 'created', 'no_payment_required', 'payment_confirmed', 'needs_verification', 'payment_declined',
+        'goods_packed',
+    ]
+
+    VERIFICATION_SOURCES = [
+        'created', 'no_payment_required', 'payment_confirmed', 'payment_declined', 'goods_picked',
+        'goods_packed', 'shipping_prepared', 'order_shipped', 'order_completed'
+    ]
 
     @property
     def associate_with_delivery(self):
@@ -39,35 +50,40 @@ class SimpleShippingWorkflowMixin:
         """
         return False
 
-    @transition(field='status', source='payment_confirmed', target='pick_goods',
-                custom=dict(admin=True, button_name=_("Pick the goods")))
-    def pick_goods(self, by=None):
-        """Change status to 'pick_goods'."""
+    @transition(
+        field='status', source=['no_payment_required', 'payment_confirmed', 'needs_verification'],
+        target='goods_picked', custom=dict(admin=True, button_name=_("Pick the goods")))
+    def goods_picked(self, by=None):
+        """Change status to 'goods_picked'."""
 
-    @transition(field='status', source='pick_goods', target='pack_goods',
+    @transition(field='status', source=['goods_picked', 'needs_verification'], target='goods_packed',
                 custom=dict(admin=True, button_name=_("Pack the goods")))
     def pack_goods(self, by=None):
-        """Change status to 'pack_goods'."""
+        """Change status to 'goods_packed'."""
 
-    @transition(field='status', source='pack_goods', target='ship_goods',
-                custom=dict(admin=True, button_name=_("Prepare for shipping")))
-    def ship_goods(self, by=None):
+    @transition(field='status', source=['goods_packed', 'needs_verification'], target='shipping_prepared',
+                custom=dict(admin=True, button_name=_("Prepare shipping")))
+    def prepare_shipping(self, by=None):
         """
-        Ship the goods. This method implicitly invokes
+        Prepare the parcel for shipping. This method implicitly invokes
         :method:`shop.shipping.modifiers.ShippingModifier.ship_the_goods(delivery)`
         """
 
-    @transition(field='status', source='ship_goods', target='ready_for_delivery',
+    @transition(field='status', source='shipping_prepared', target='order_shipped',
                 custom=dict(auto=True))
-    def prepare_for_delivery(self, by=None):
-        """
-        Put the parcel into the outgoing delivery.
-        This method is invoked automatically by `ship_goods`.
-        """
+    def ship_order(self, by=None):
+        """Order was picked up by shipping service provider (method auto invoked)."""
 
     def update_or_create_delivery(self, orderitem_data):
         """
         Hook to create a delivery object with items.
+        """
+
+    @transition(field='status', source=['order_shipped', 'needs_verification'], target='order_completed',
+                custom=dict(admin=True, button_name=_("Order completed")))
+    def complete_order(self, by=None):
+        """
+        Order was delivered.
         """
 
 
@@ -86,10 +102,10 @@ class CommissionGoodsWorkflowMixin(SimpleShippingWorkflowMixin):
     def associate_with_delivery(self):
         return True
 
-    @transition(field='status', source='ship_goods', target='ready_for_delivery',
+    @transition(field='status', source='shipping_prepared', target='order_shipped',
                 custom=dict(auto=True))
-    def prepare_for_delivery(self, by=None):
-        """Put the parcel into the outgoing delivery."""
+    def ship_order(self, by=None):
+        """Order was picked up by shipping service provider (method auto invoked)."""
 
     def update_or_create_delivery(self, orderitem_data):
         """
@@ -146,25 +162,25 @@ class PartialDeliveryWorkflowMixin(CommissionGoodsWorkflowMixin):
     def ready_for_shipping(self):
         return self.delivery_set.filter(shipped_at__isnull=True).exists()
 
-    @transition(field='status', source='*', target='pick_goods', conditions=[ready_for_picking],
+    @transition(field='status', source='*', target='goods_picked', conditions=[ready_for_picking],
                 custom=dict(admin=True, button_name=_("Pick the goods")))
     def pick_goods(self, by=None):
-        """Change status to 'pick_goods'."""
+        """Change status to 'goods_picked'."""
 
-    @transition(field='status', source=['pick_goods'], target='pack_goods',
+    @transition(field='status', source=['goods_picked'], target='goods_packed',
                 custom=dict(admin=True, button_name=_("Pack the goods")))
     def pack_goods(self, by=None):
-        """Prepare shipping object and change status to 'pack_goods'."""
+        """Prepare shipping object and change status to 'goods_packed'."""
 
-    @transition(field='status', source='*', target='ship_goods', conditions=[ready_for_shipping],
-                custom=dict(admin=True, button_name=_("Ship the goods")))
-    def ship_goods(self, by=None):
-        """Ship the goods."""
+    @transition(field='status', source='*', target='shipping_prepared', conditions=[ready_for_shipping],
+                custom=dict(admin=True, button_name=_("Prepare Shipping")))
+    def prepare_shipping(self, by=None):
+        """Prepare the parcel for shipping."""
 
-    @transition(field='status', source='ship_goods', target='ready_for_delivery',
+    @transition(field='status', source='shipping_prepared', target='order_shipped',
                 custom=dict(auto=True))
-    def prepare_for_delivery(self, by=None):
-        """Put the parcel into the outgoing delivery."""
+    def ship_order(self, by=None):
+        """Order was picked up by shipping service provider (method auto invoked)."""
 
     def update_or_create_delivery(self, orderitem_data):
         """

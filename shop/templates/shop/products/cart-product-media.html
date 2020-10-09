@@ -8,7 +8,7 @@
 	</a>
 	<div class="media-body">
 {% block product-media %}
-		<h5 class="mt-0"><a href="{{ product.get_absolute_url }}">{{ product.product_name }}</a></h5>
+		<h5 class="mt-0"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h5>
 		{{ product.caption|truncatewords_html:30 }}
 {% endblock %}
 	</div>
