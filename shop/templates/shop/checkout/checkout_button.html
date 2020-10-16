@@ -1,0 +1,8 @@
+{% load cms_tags %}
+<div class="d-flex justify-content-end py-3">
+  <a href="{% page_url "shop-cart-checkout" %}"
+    class="btn {{ instance.css_classes }}{% if cart.is_empty %} disabled{% endif %}" role="button"
+    {% if instance.inline_styles %}style="{{ instance.inline_styles }}"{% endif %}>
+    {{ icon_top }}{{ icon_left }}{{ instance.glossary.button_text }}{{ icon_right }}
+  </a>
+</div>
