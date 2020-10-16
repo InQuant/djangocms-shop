@@ -1,9 +1,28 @@
+from django.conf import settings
 from django.db.models import Sum
 from django.utils import timezone
 from django.utils.functional import cached_property
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import get_language, gettext_lazy as _
 from django_fsm import transition
 from shop.models.delivery import DeliveryModel, DeliveryItemModel
+
+from post_office import mail
+from post_office.models import EmailTemplate
+
+_default_order_confirmation_html_content = """
+{% extends "shop/email/base.html" %}
+
+{% block email-head %}
+  {% include "shop/email/customer-information.html" %}
+{% endblock %}
+
+{% block email-body %}
+  {% include "shop/email/order-detail.html" %}
+{% endblock %}
+
+{% block email-foot %}
+{% endblock %}
+"""
 
 
 class SimpleShippingWorkflowMixin:
@@ -35,6 +54,40 @@ class SimpleShippingWorkflowMixin:
         'created', 'no_payment_required', 'payment_confirmed', 'payment_declined', 'goods_picked',
         'goods_packed', 'shipping_prepared', 'order_shipped', 'order_completed'
     ]
+
+    def send_order_confirmation(self, recipients=[], **kwargs):
+        """
+        :kwargs: can be: sender, cc, bcc, language, context
+        sends order confirmation (template `order-confirmation`) to given recipients.
+        """
+        recipients = recipients or [self.customer.email, ]
+        language = kwargs.get('language', get_language())
+
+        try:
+            template = EmailTemplate.objects.get(name='order-confirmation', language=language)
+        except Exception:
+            template, created = EmailTemplate.objects.get_or_create(
+                name='order-confirmation',
+                language='',
+                defaults={
+                    'description': _('send if a customer purchases an order via checkout.'),
+                    'subject': _('Order Confirmation %s') % self.number,
+                    'html_content': _default_order_confirmation_html_content,
+                }
+            )
+
+        mail.send(
+            recipients,
+            sender=kwargs.get('sender',  settings.DEFAULT_FROM_EMAIL),
+            cc=kwargs.get('cc'),
+            bcc=kwargs.get('bcc'),
+            template=template,
+            language=kwargs.get('language', get_language()),
+            context=kwargs.get('context', {
+                'customer': self.customer,
+                'order': self,
+            })
+        )
 
     @property
     def associate_with_delivery(self):

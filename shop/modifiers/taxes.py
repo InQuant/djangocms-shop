@@ -12,7 +12,7 @@ class CartIncludeTaxModifier(BaseCartModifier):
     By placing this modifier after the shipping modifiers, one can add tax to
     the shipping costs. Otherwise shipping cost are considered tax free.
     """
-    identifier = 'taxes'
+    identifier = 'include-taxes'
     taxes = app_settings.VALUE_ADDED_TAX / 100
 
     def add_extra_cart_row(self, cart, request):
@@ -33,7 +33,7 @@ class CartExcludedTaxModifier(BaseCartModifier):
     This tax calculator presumes that unit prices are gross prices, hence also the subtotal,
     and that the tax is calculated per cart but not added to the cart.
     """
-    identifier = 'taxes'
+    identifier = 'exclude-taxes'
     taxes = 1 - 1 / (1 + app_settings.VALUE_ADDED_TAX / 100)
 
     def add_extra_cart_row(self, cart, request):

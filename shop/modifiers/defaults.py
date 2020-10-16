@@ -13,7 +13,7 @@ class DefaultCartModifier(BaseCartModifier):
     Since this modifier sets the cart items line total, it must be listed as the first
     entry in `SHOP_CART_MODIFIERS`.
     """
-    identifier = 'default'
+    identifier = 'default-cart'
 
     def pre_process_cart_item(self, cart, cart_item, request, raise_exception=False):
         """

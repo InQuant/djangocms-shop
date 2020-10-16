@@ -241,10 +241,10 @@ class PrintInvoiceAdminMixin:
         return HttpResponse(content)
 
     def print_out(self, obj):
-        if obj.status in ['order_shipped']:
-            link = reverse('admin:print_invoice', args=(obj.id,)), pgettext_lazy('admin', "Invoice")
-            return format_html(
-                '<span class="object-tools"><a href="{0}" class="viewsitelink" target="_new">{1}</a></span>',
-                *link)
-        return ''
+        # if obj.status in ['order_shipped']:
+        link = reverse('admin:print_invoice', args=(obj.id,)), pgettext_lazy('admin', "Invoice")
+        return format_html(
+            '<span class="object-tools"><a href="{0}" class="viewsitelink" target="_new">{1}</a></span>',
+            *link)
+        # return ''
     print_out.short_description = pgettext_lazy('admin', "Print out")

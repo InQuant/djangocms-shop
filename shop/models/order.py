@@ -208,12 +208,6 @@ class BaseOrder(models.Model, metaclass=WorkflowMixinMetaclass):  # noqa: E999
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if '_subtotal' not in kwargs:
-            self._subtotal = Decimal(0)
-        if '_total' not in kwargs:
-            self._total = Decimal(0)
-        if 'currency' not in kwargs:
-            self.currency = 'EUR'
         self.logger = logging.getLogger('shop.order')
 
     def __str__(self):

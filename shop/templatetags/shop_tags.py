@@ -1,3 +1,4 @@
+import dateutil.parser
 from collections import OrderedDict
 from django import template
 from django.conf import settings
@@ -63,10 +64,7 @@ def cart_icon(parser, token):
 
 
 def from_iso8601(value):
-    try:
-        return datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%fZ")
-    except ValueError:
-        return datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
+    return dateutil.parser.parse(value)
 
 
 @register.filter(expects_localtime=True, is_safe=False)
@@ -78,7 +76,7 @@ def date(value, arg=None):
     if value in (None, ''):
         return ''
     if not isinstance(value, datetime):
-        value = from_iso8601(value)
+        value = dateutil.parser.parse(value)
     if arg is None:
         arg = settings.DATE_FORMAT
     try:

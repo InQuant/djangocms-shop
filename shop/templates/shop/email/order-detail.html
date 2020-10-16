@@ -19,17 +19,20 @@
 
 {% block email-order-body %}
 	<tbody>
-	{% for item in order.items %}
+	{% for item in order.items.all %}
 		<tr>
 			<td rowspan="2" style="text-align: center; vertical-align: middle; padding: 10px; border-bottom: 2px solid #eee;">
 				{{ item.quantity }} &times;
 			</td>
 			<td rowspan="2" style="text-align: center; vertical-align: middle; padding: 10px; border-bottom: 2px solid #eee;">
-				<img src="{% inline_image item.summary.media %}">
+				<img src="{# inline_image item.summary.media #}">
 			</td>
 			<td>
-				<span style="font-size: 120%; font-weight: bold;">{{ item.summary.product_name }}</span>
-				{{ item.summary.caption|safe }}
+				<span style="font-size: 120%; font-weight: bold;">{{ item.product.name }}</span>
+				{{ item.product.caption|safe }}
+        {% if item.product.is_custom %}
+        <a href="{{ item.get_site_custom_data_url }}"><b>{% trans "Upload custom article data here!" %}</b></a>
+        {% endif %}
 			</td>
 			<td style="font-size: 120%; text-align: right; vertical-align: middle; padding: 10px 15px; white-space: nowrap;">
 				{{ item.line_total }}
@@ -71,6 +74,10 @@
 			<td style="font-size: 120%; text-align: right; padding: 10px 15px; white-space: nowrap; font-weight: bold;">{{ order.total }}</td>
 		</tr>
 	</tfoot>
+  <div>
 {% endblock email-order-foot %}
 </table>
+{% if not order.custom_items_processed %}
+  <div class="lead">{% trans "Please use the given links above to upload custom article data to enable order processing!" %}</div>
+{% endif %}
 {% endspaceless %}

@@ -10,7 +10,7 @@ module.controller('checkoutPurchaseCtrl', ['$http', '$q', '$scope', function($ht
 	$scope.purchaseNow = function(endpoint) {
 		var deferred = $q.defer();
 		$http.post(endpoint).then(function(response) {
-			$scope.purchase = response.data;
+            eval(response.data.expression);
 			deferred.resolve(response);
 		});
 		return deferred.promise;

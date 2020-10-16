@@ -15,7 +15,7 @@
 <div class="card {{ card_css_classes }} {{ instance.css_classes }}"{% if inline_styles %} style="{{ inline_styles }}"{% endif %} shop-add-to-cart="{% block add-to-cart-url %}{{ product.get_absolute_url }}/add-to-cart{% endblock %}">
 
 	<div class="card-header">
-	{% blocktrans with product_name=product.product_name context "catalog" %}Add {{ product_name }} to cart{% endblocktrans %}
+	{% blocktrans with product_name=product.name context "catalog" %}Add {{ product_name }} to cart{% endblocktrans %}
 	</div>
 
 	{% block add-product-to-cart-body %}
@@ -92,7 +92,7 @@
 
 	{% block add-to-cart-modal-body %}
 	<div class="modal-body" ng-cloak>
-		{% verbatim %}{{ context.quantity|number }} &times; {% endverbatim %}{{ product.product_name }}
+		{% verbatim %}{{ context.quantity|number }} &times; {% endverbatim %}{{ product.name }}
 		{% trans "for {{ context.unit_price }} per piece: {{ context.subtotal }}" context "catalog" %}
 	</div>
 	{% endblock add-to-cart-modal-body %}
