@@ -8,6 +8,11 @@ from shop.rest.money import MoneyField
 
 
 class OrderListSerializer(serializers.ModelSerializer):
+    items = app_settings.ORDER_ITEM_SERIALIZER(
+        many=True,
+        read_only=True,
+    )
+
     number = serializers.CharField(
         source='get_number',
         read_only=True,
@@ -28,16 +33,12 @@ class OrderListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderModel
-        fields = ['number', 'url', 'created_at', 'updated_at', 'subtotal', 'total', 'status',
+        fields = ['number', 'url', 'created_at', 'updated_at', 'subtotal', 'total', 'status', 'items',
                   'shipping_address_text', 'billing_address_text']  # TODO: these fields are not part of the base model
         read_only_fields = ['shipping_address_text', 'billing_address_text']
 
 
 class OrderDetailSerializer(OrderListSerializer):
-    items = app_settings.ORDER_ITEM_SERIALIZER(
-        many=True,
-        read_only=True,
-    )
 
     extra = serializers.DictField(read_only=True)
     amount_paid = MoneyField(read_only=True)

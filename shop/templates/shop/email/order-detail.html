@@ -28,11 +28,10 @@
 				<img src="{# inline_image item.summary.media #}">
 			</td>
 			<td>
+        {% block order-item-summary %}
 				<span style="font-size: 120%; font-weight: bold;">{{ item.product.name }}</span>
 				{{ item.product.caption|safe }}
-        {% if item.product.is_custom %}
-        <a href="{{ item.get_site_custom_data_url }}"><b>{% trans "Upload custom article data here!" %}</b></a>
-        {% endif %}
+        {% endblock order-item-summary %}
 			</td>
 			<td style="font-size: 120%; text-align: right; vertical-align: middle; padding: 10px 15px; white-space: nowrap;">
 				{{ item.line_total }}

@@ -45,7 +45,7 @@
 			<div class="col-2 text-right">
 				{{ item.quantity }}<span class="px-1">&times;</span>
 			</div>
-			<div class="col-10">{{ item.summary.media }}</div>
+      {% block order-item-summary %}<div class="col-10">{{ item.summary.media }}</div>{% endblock %}
 		</div>
 	</div>
 	<div class="col-12 col-md-6">

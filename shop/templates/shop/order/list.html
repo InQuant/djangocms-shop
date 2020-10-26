@@ -1,4 +1,4 @@
-{% load i18n static cms_tags sass_tags sekizai_tags %}
+{% load i18n static cms_tags sass_tags sekizai_tags shop_tags %}
 
 {% addtoblock "css" %}<link href="{% sass_src 'shop/css/list-items.scss' %}" rel="stylesheet" type="text/css" />{% endaddtoblock %}
 
@@ -19,22 +19,20 @@
 {% block shop-order-body %}
 	{% for order in data.results %}
 <div class="shop-list-item row border-top py-2">
-	<div class="col-12 col-lg-6">
-		<div class="row flex-nowrap lead">
-			<div class="col-8">
-				<a class="mr-lg-5 mr-3" href="{{ order.url }}">{{ order.number }}</a>
-				<small class="text-nowrap text-muted" shop-timestamp="{{ order.created_at }}" time-format="d. MMM yyyy"></small>
-			</div>
-			<div class="col-4 text-nowrap text-right">{{ order.total }}</div>
-		</div>
+	<div class="col-6 col-lg-auto order-1">
+    {% block shop-order-first-column %}
+    <div><a class="mr-lg-5 mr-3 lead text-nowrap" href="{{ order.url }}">{{ order.number }}</a></div>
+    <div><small class="text-nowrap text-muted">{{ order.created_at|date:"Y-m-d H:i" }}</small></div>
+    {% endblock %}
 	</div>
-	<div class="col-12 col-lg-6">
-		<div class="row flex-nowrap">
-			<div class="col-8">{{ order.shipping_address_text }}</div>
-			<div class="col-4 text-right">
-				<div class="badge badge-primary">{{ order.status }}</div>
-			</div>
-		</div>
+	<div class="col-12 col-lg order-3 order-lg-2">
+    {% for item in order.items %}
+    <div>{{ item.quantity }} x {{ item.summary.name }}</div>
+    {% endfor %}
+	</div>
+	<div class="col-6 order-2 col-lg-auto text-right text-nowrap">
+    <div class="badge badge-primary">{{ order.status }}</div>
+    <div class="lead text-nowrap">{{ order.total }}</div>
 	</div>
 </div>
 	{% endfor %}
