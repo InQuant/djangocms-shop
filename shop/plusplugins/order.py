@@ -10,7 +10,7 @@ class OrderPluginBase(PlusPluginBase):
     render_type = 'not-set'
 
     def get_render_template(self, context, instance, placeholder):
-        render_template = instance.glossary.get('render_template')
+        render_template = getattr(self, 'render_template', None)
         if render_template:
             return get_template(render_template)
         try:
