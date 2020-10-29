@@ -63,18 +63,15 @@ class SimpleShippingWorkflowMixin:
         recipients = recipients or [self.customer.email, ]
         language = kwargs.get('language', get_language())
 
-        try:
-            template = EmailTemplate.objects.get(name='order-confirmation', language=language)
-        except Exception:
-            template, created = EmailTemplate.objects.get_or_create(
-                name='order-confirmation',
-                language='',
-                defaults={
-                    'description': _('send if a customer purchases an order via checkout.'),
-                    'subject': _('Order Confirmation %s') % self.number,
-                    'html_content': _default_order_confirmation_html_content,
-                }
-            )
+        template, created = EmailTemplate.objects.get_or_create(
+            name='order-confirmation',
+            language=language,
+            defaults={
+                'description': _('send if a customer purchases an order via checkout.'),
+                'subject': _('Order Confirmation {{ order.number }}'),
+                'html_content': _default_order_confirmation_html_content,
+            }
+        )
 
         mail.send(
             recipients,
