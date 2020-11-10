@@ -1,4 +1,4 @@
-{% load static sekizai_tags %}
+{% load static sekizai_tags i18n %}
 
 {% addtoblock "js" %}<script src="{% static 'shop/js/checkout.js' %}" type="text/javascript"></script>{% endaddtoblock %}
 {% addtoblock "js" %}
@@ -8,11 +8,13 @@
 {% endaddtoblock "js" %}
 
 <div ng-controller="checkoutPurchaseCtrl" class="d-flex justify-content-end py-3">
-  <a href class="btn {{ instance.css_classes }}{% if cart.is_empty %} disabled{% endif %}" role="button"
+  <button class="btn {{ instance.css_classes }}" ng-disabled="is_disabled('{{ cart.is_empty }}')" role="button"
     {% if instance.inline_styles %}style="{{ instance.inline_styles }}"{% endif %}
     ng-click="purchaseNow('{% url 'shop:checkout-purchase' %}')">
-    {{ icon_top }}{{ icon_left }}{{ instance.glossary.button_text }}{{ icon_right }}
-  </a>
+    <span ng-if="!lock">{{ icon_top }}{{ icon_left }}{{ instance.glossary.button_text }}{{ icon_right }}</span>
+    <span ng-if="lock" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    <span ng-if="lock">{% trans "Processing..." %}</span>
+  </button>
 </div>
 
 {% if instance.glossary.extra_css %}
