@@ -8,7 +8,7 @@ class OrderItemSerializer(BaseOrderItemSerializer):
         help_text="Sub-serializer for fields to be shown in the product's summary.")
 
     class Meta(BaseOrderItemSerializer.Meta):
-        fields = ['line_total', 'unit_price', 'product_code', 'quantity', 'summary', 'extra']
+        fields = ['line_total', 'unit_price', 'product_code', 'product_name', 'quantity', 'summary', 'extra']
 
     def get_summary(self, order_item):
         label = self.context.get('render_label', 'order')

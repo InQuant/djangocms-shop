@@ -13,7 +13,11 @@
 			<div>{{ item.quantity }}<span class="px-1">&times;</span></div>
 		</div>
 		<div class="col-5">
-			{{ item.summary.media }}
+      {% if item.summary.media %}
+        {{ item.summary.media }}
+			{% else %}
+      <div>{{ item.product_code }} {{ item.product_name }}</div>
+			{% endif %}
 		</div>
 		<div class="col-6">
 			<div class="row text-nowrap flex-nowrap lead text-right">
