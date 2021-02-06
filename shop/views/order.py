@@ -7,9 +7,9 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.renderers import BrowsableAPIRenderer
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import BasePermission
+from shop.conf import app_settings
 from shop.rest.money import JSONRenderer
 from shop.rest.renderers import CMSPageRenderer
-from shop.serializers.order import OrderListSerializer, OrderDetailSerializer
 from shop.models.order import OrderModel
 
 
@@ -43,8 +43,8 @@ class OrderView(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateM
     Base View class to render the fulfilled orders for the current user.
     """
     renderer_classes = [CMSPageRenderer, JSONRenderer, BrowsableAPIRenderer]
-    list_serializer_class = OrderListSerializer
-    detail_serializer_class = OrderDetailSerializer
+    list_serializer_class = app_settings.SHOP_ORDER_LIST_SERIALIZER
+    detail_serializer_class = app_settings.SHOP_ORDER_DETAIL_SERIALIZER
     pagination_class = OrderPagination
     permission_classes = [OrderPermission]
     lookup_field = lookup_url_kwarg = 'slug'
@@ -69,7 +69,7 @@ class OrderView(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateM
             if not self.many:
                 # add an extra ance to the breadcrumb to show the order number
                 renderer_context.update(
-                    is_last_order = self.is_last(),
+                    is_last_order=self.is_last(),
                     extra_ance=self.get_object().get_number(),
                 )
         return renderer_context

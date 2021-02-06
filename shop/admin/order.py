@@ -14,7 +14,6 @@ from shop.conf import app_settings
 from shop.models.customer import CustomerModel
 from shop.models.order import OrderItemModel, OrderPayment
 from shop.modifiers.pool import cart_modifiers_pool
-from shop.serializers.order import OrderDetailSerializer
 from shop.transition import transition_change_notification
 
 
@@ -225,7 +224,7 @@ class PrintInvoiceAdminMixin:
         order = self.get_object(request, pk)
         context = {'request': request, 'render_label': 'print'}
         customer_serializer = app_settings.CUSTOMER_SERIALIZER(order.customer)
-        order_serializer = OrderDetailSerializer(order, context=context)
+        order_serializer = app_settings.SHOP_ORDER_DETAIL_SERIALIZER(order, context=context)
         return template.render(context={
             'customer': customer_serializer.data,
             'order': order_serializer.data,

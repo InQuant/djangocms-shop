@@ -191,6 +191,34 @@ class DefaultSettings:
         return OrderItemSerializer
 
     @property
+    def SHOP_ORDER_LIST_SERIALIZER(self):
+        """
+        Depending on the materialized Order model, use this directive to configure the
+        serializer.
+
+        Defaults to :class:`shop.serializers.order.OrderListSerializer`.
+        """
+        from django.utils.module_loading import import_string
+
+        s = self._setting('SHOP_ORDER_LIST_SERIALIZER', 'shop.serializers.order.OrderListSerializer')
+        OrderListSerializer = import_string(s)
+        return OrderListSerializer
+
+    @property
+    def SHOP_ORDER_DETAIL_SERIALIZER(self):
+        """
+        Depending on the materialized Order model, use this directive to configure the
+        serializer.
+
+        Defaults to :class:`shop.serializers.order.OrderDetailSerializer`.
+        """
+        from django.utils.module_loading import import_string
+
+        s = self._setting('SHOP_ORDER_LIST_SERIALIZER', 'shop.serializers.order.OrderDetailSerializer')
+        OrderDetailSerializer = import_string(s)
+        return OrderDetailSerializer
+
+    @property
     def SHOP_CART_MODIFIERS(self):
         """
         Specifies the list of :ref:`reference/cart-modifiers`. They are are applied on each cart item and the
@@ -322,5 +350,6 @@ class DefaultSettings:
         if not key.startswith('SHOP_'):
             key = 'SHOP_' + key
         return self.__getattribute__(key)
+
 
 app_settings = DefaultSettings()

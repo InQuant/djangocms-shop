@@ -9,7 +9,6 @@ from shop.conf import app_settings
 from shop.models.order import BaseOrder
 from shop.models.notification import Notification
 from shop.serializers.delivery import DeliverySerializer
-from shop.serializers.order import OrderDetailSerializer
 from shop.signals import email_queued
 
 
@@ -54,7 +53,7 @@ def transition_change_notification(order):
         emulated_request = EmulateHttpRequest(order.customer, order.stored_request)
         customer_serializer = app_settings.CUSTOMER_SERIALIZER(order.customer)
         render_context = {'request': emulated_request, 'render_label': 'email'}
-        order_serializer = OrderDetailSerializer(order, context=render_context)
+        order_serializer = app_settings.SHOP_ORDER_DETAIL_SERIALIZER(order, context=render_context)
         language = order.stored_request.get('language')
         context = {
             'customer': customer_serializer.data,
