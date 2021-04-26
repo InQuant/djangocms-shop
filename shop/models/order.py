@@ -2,6 +2,7 @@ from decimal import Decimal
 import logging
 from urllib.parse import urljoin
 
+from cms.utils.i18n import get_current_language
 from django.core import checks
 from django.core.exceptions import ImproperlyConfigured
 from django.db import models, transaction
@@ -90,7 +91,7 @@ class OrderManager(models.Manager):
             except Page.DoesNotExist:
                 page = Page.objects.public().filter(application_urls='OrderApp').first()
             if page:
-                self._summary_url = page.get_absolute_url()
+                self._summary_url = page.get_absolute_url(language=get_current_language())
             else:
                 try:  # through hardcoded urlpatterns
                     self._summary_url = reverse('shop-order')
@@ -129,8 +130,8 @@ class WorkflowMixinMetaclass(deferred.ForeignKeyBuilder):
         result = {}
         for name, method in base.__dict__.items():
             if callable(method) and hasattr(method, '_django_fsm'):
-                for name, transition in method._django_fsm.transitions.items():
-                    if transition.custom.get('auto'):
+                for name, trans in method._django_fsm.transitions.items():
+                    if trans.custom.get('auto'):
                         result.update({name: method})
         return result
 
