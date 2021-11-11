@@ -33,7 +33,10 @@ class ShopCartPluginForm(PlusPluginFormBase):
 
 
 class ShopCartPlugin(StylePluginMixin, PlusPluginBase):
-    name = _('Shopping Cart')
+    footnote_html = """
+    Shows the customers current shopping cart.
+    """
+    name = 'Shopping Cart'
     module = _('Shop')
     cache = False
     allow_children = True

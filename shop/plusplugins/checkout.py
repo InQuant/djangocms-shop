@@ -36,8 +36,11 @@ class CheckoutShippingAddressPluginForm(PlusPluginFormBase):
 
 
 class CheckoutShippingAddressPlugin(StylePluginMixin, PlusPluginBase):
-    name = _('Checkout Shipping Address')
-    module = _('Shop')
+    footnote_html = """
+    Manages the current order-checkout shipping address.
+    """
+    name = 'Checkout Shipping Address'
+    module = 'Shop'
     cache = False
     allow_children = True
     form = CheckoutShippingAddressPluginForm
@@ -84,8 +87,11 @@ class CheckoutPaymentPluginForm(PlusPluginFormBase):
 
 
 class CheckoutPaymentPlugin(StylePluginMixin, PlusPluginBase):
-    name = _('Checkout Payment')
-    module = _('Shop')
+    footnote_html = """
+    Manages the current order-checkout payment.
+    """
+    name = 'Checkout Payment'
+    module = 'Shop'
     cache = False
     allow_children = True
     form = CheckoutPaymentPluginForm
@@ -202,10 +208,16 @@ class CheckoutButtonPluginBase(StylePluginMixin, PlusPluginBase):
 
 
 class CheckoutButtonPlugin(CheckoutButtonPluginBase):
+    footnote_html = """
+    Shows the carts order checkout button.
+    """
     name = 'Checkout Button'
     render_template = 'shop/checkout/checkout_button.html'
 
 
 class PurchaseButtonPlugin(CheckoutButtonPluginBase):
+    footnote_html = """
+    Shows the checkouts purchase button.
+    """
     name = 'Purchase Button'
     render_template = 'shop/checkout/purchase_button.html'

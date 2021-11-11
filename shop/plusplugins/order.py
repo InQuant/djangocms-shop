@@ -24,16 +24,22 @@ class OrderPluginBase(PlusPluginBase):
 
 
 class OrderListPlugin(OrderPluginBase):
-    name = _('Order List')
-    module = 'shop'
+    footnote_html = """
+    Shows a customer order listing.
+    """
+    name = 'Order List'
+    module = 'Shop'
     allow_children = False
     cache = False
     render_type = 'list'
 
 
 class OrderDetailPlugin(OrderPluginBase):
-    name = _('Order Detail')
-    module = 'shop'
+    footnote_html = """
+    Shows customer order details.
+    """
+    name = 'Order Detail'
+    module = 'Shop'
     allow_children = False
     cache = False
     render_type = 'detail'
