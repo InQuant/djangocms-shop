@@ -28,7 +28,7 @@ class OrderListPlugin(OrderPluginBase):
     Shows a customer order listing.
     """
     name = 'Order List'
-    module = 'Shop'
+    module = 'shop'
     allow_children = False
     cache = False
     render_type = 'list'
@@ -39,7 +39,7 @@ class OrderDetailPlugin(OrderPluginBase):
     Shows customer order details.
     """
     name = 'Order Detail'
-    module = 'Shop'
+    module = 'shop'
     allow_children = False
     cache = False
     render_type = 'detail'

@@ -37,7 +37,7 @@ class ShopCartPlugin(StylePluginMixin, PlusPluginBase):
     Shows the customers current shopping cart.
     """
     name = 'Shopping Cart'
-    module = _('Shop')
+    module = 'shop'
     cache = False
     allow_children = True
     form = ShopCartPluginForm

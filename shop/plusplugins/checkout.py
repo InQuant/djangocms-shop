@@ -40,7 +40,7 @@ class CheckoutShippingAddressPlugin(StylePluginMixin, PlusPluginBase):
     Manages the current order-checkout shipping address.
     """
     name = 'Checkout Shipping Address'
-    module = 'Shop'
+    module = 'shop'
     cache = False
     allow_children = True
     form = CheckoutShippingAddressPluginForm
@@ -91,7 +91,7 @@ class CheckoutPaymentPlugin(StylePluginMixin, PlusPluginBase):
     Manages the current order-checkout payment.
     """
     name = 'Checkout Payment'
-    module = 'Shop'
+    module = 'shop'
     cache = False
     allow_children = True
     form = CheckoutPaymentPluginForm
@@ -160,7 +160,7 @@ class CheckoutButtonForm(PlusPluginFormBase):
 
 
 class CheckoutButtonPluginBase(StylePluginMixin, PlusPluginBase):
-    module = _('Shop')
+    module = 'shop'
     form = CheckoutButtonForm
     allow_children = False
     css_class_fields = StylePluginMixin.css_class_fields + ['button_size', 'button_block']
