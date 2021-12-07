@@ -51,21 +51,13 @@ def transition_change_notification(order):
 
         # emulate a request object which behaves similar to that one, when the customer submitted its order
         emulated_request = EmulateHttpRequest(order.customer, order.stored_request)
-        customer_serializer = app_settings.CUSTOMER_SERIALIZER(order.customer)
         render_context = {'request': emulated_request, 'render_label': 'email'}
-        order_serializer = app_settings.SHOP_ORDER_DETAIL_SERIALIZER(order, context=render_context)
         language = order.stored_request.get('language')
         context = {
-            'customer': customer_serializer.data,
-            'order': order_serializer.data,
-            'ABSOLUTE_BASE_URI': emulated_request.build_absolute_uri().rstrip('/'),
+            'customer': order.customer,
+            'order': order,
             'render_language': language,
         }
-        try:
-            latest_delivery = order.delivery_set.latest()
-            context['latest_delivery'] = DeliverySerializer(latest_delivery, context=render_context).data
-        except (AttributeError, models.ObjectDoesNotExist):
-            pass
         try:
             template = notification.mail_template.translated_templates.get(language=language)
         except EmailTemplate.DoesNotExist:
@@ -73,8 +65,7 @@ def transition_change_notification(order):
         attachments = {}
         for notiatt in notification.notificationattachment_set.all():
             attachments[notiatt.attachment.original_filename] = notiatt.attachment.file.file
-        mail.send(recipient, template=template, context=context,
-                  attachments=attachments, render_on_delivery=True)
+        mail.send(recipient, template=template, context=context, attachments=attachments)
         emails_in_queue = True
     if emails_in_queue:
         email_queued()

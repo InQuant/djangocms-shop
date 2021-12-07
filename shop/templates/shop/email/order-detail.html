@@ -19,7 +19,7 @@
 
 {% block email-order-body %}
 	<tbody>
-	{% for item in order.items %}
+	{% for item in order.items.all %}
 		<tr>
 			<td rowspan="2" style="text-align: center; vertical-align: middle; padding: 10px; border-bottom: 2px solid #eee;">
 				{{ item.quantity }} &times;
