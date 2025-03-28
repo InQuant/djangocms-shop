@@ -1,6 +1,7 @@
-from django.conf.urls import url
+from django.urls import re_path
 from django.contrib import admin
-from django.db.models.fields import Field, FieldDoesNotExist
+from django.db.models.fields import Field
+from django.core.exceptions import FieldDoesNotExist
 from django.forms import widgets
 from django.http import HttpResponse
 from django.template.loader import select_template
@@ -214,7 +215,7 @@ class PrintInvoiceAdminMixin:
 
     def get_urls(self):
         my_urls = [
-            url(r'^(?P<pk>\d+)/print_invoice/$', self.admin_site.admin_view(self.render_invoice),
+            re_path(r'^(?P<pk>\d+)/print_invoice/$', self.admin_site.admin_view(self.render_invoice),
                 name='print_invoice'),
         ]
         my_urls.extend(super().get_urls())

@@ -1,4 +1,4 @@
-from django.conf.urls import include, url
+from django.urls import include, re_path
 from shop.urls import rest_api
 # from shop.urls import auth
 # from shop.urls import payment
@@ -7,7 +7,7 @@ from shop.urls import rest_api
 app_name = 'shop'
 
 urlpatterns = [
-    url(r'^api/', include(rest_api)),
+    re_path(r'^api/', include(rest_api)),
     # url(r'^auth/', include(auth)),
     # url(r'^payment/', include(payment)),
 ]

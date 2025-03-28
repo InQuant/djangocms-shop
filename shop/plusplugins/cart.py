@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.html import mark_safe
 
 from cmsplus.forms import PlusPluginFormBase, get_style_form_fields
-from cmsplus.plugin_base import StylePluginMixin, PlusPluginBase
+from cmsplus.plugin_base import StylePluginMixin, PlusPlugin
 
 from shop.conf import app_settings
 from shop.models.cart import CartModel
@@ -29,10 +29,10 @@ class ShopCartPluginForm(PlusPluginFormBase):
     )
 
     STYLE_CHOICES = 'SHOP_CART_STYLES'
-    extra_style, extra_classes, label, extra_css = get_style_form_fields(STYLE_CHOICES)
+    plugin_title, extra_style, extra_css = get_style_form_fields(STYLE_CHOICES)
 
 
-class ShopCartPlugin(StylePluginMixin, PlusPluginBase):
+class ShopCartPlugin(StylePluginMixin, PlusPlugin):
     footnote_html = """
     Shows the customers current shopping cart.
     """

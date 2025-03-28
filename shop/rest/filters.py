@@ -23,8 +23,8 @@ class CMSPagesFilterBackend(BaseFilterBackend):
             msg = "`cms_pages_fields` must be a list or tuple of fields referring to djangoCMS pages."
             raise ImproperlyConfigured(msg)
         current_page = request.current_page
-        if current_page.publisher_is_draft:
-            current_page = current_page.publisher_public
+        # TODO: if current_page.publisher_is_draft:
+        #   current_page = current_page.publisher_public
         return self._get_filtered_queryset(current_page, queryset, cms_pages_fields)
 
 

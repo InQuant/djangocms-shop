@@ -3,19 +3,15 @@ from setuptools import setup, find_packages
 import shop
 
 REQUIREMENTS = [
-    'Django>=2.1,<3.1',
-    'django-filer>=1.7',
     'django-ipware',
     'django-fsm>=2.7',
     'django-fsm-admin',
-    'djangorestframework>=3.9,<4',
-    # 'django-rest-auth',
+    'django-rest-auth',
     'Django-Select2',
     'django-admin-sortable2',
     # 'django-formtools',
     # 'django_polymorphic',
     'django-post_office',
-    'django-cms>=3.7',
 ]
 
 CLASSIFIERS = [

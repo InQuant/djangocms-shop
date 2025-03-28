@@ -14,7 +14,6 @@ class Migration(migrations.Migration):
     dependencies = [
         ('post_office', '0008_attachment_headers'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('filer', '0011_auto_20190418_0137'),
     ]
 
     operations = [

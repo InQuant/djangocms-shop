@@ -71,7 +71,7 @@ class CMSPageAsCategoryMixin:
         if db_field.name == 'cms_pages':
             # restrict many-to-many field for cms_pages to ProductApp only
             limit_choices_to = {
-                'publisher_is_draft': False,
+                # TODO: 'publisher_is_draft': False,
                 'application_urls': getattr(self, 'limit_to_cmsapp', _find_catalog_list_apphook()),
             }
             queryset = Page.objects.filter(**limit_choices_to)
@@ -147,7 +147,7 @@ class CMSPageFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         limit_choices_to = {
-            'publisher_is_draft': False,
+            # TODO: 'publisher_is_draft': False,
             'application_urls': getattr(self, 'limit_to_cmsapp', _find_catalog_list_apphook())
         }
         queryset = Page.objects.filter(**limit_choices_to)

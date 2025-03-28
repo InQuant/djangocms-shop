@@ -1,6 +1,5 @@
 import enum
 # from django.conf import settings
-from jsonfield.fields import JSONField as _JSONField
 from django.db import models
 from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
@@ -19,7 +18,7 @@ else:
 '''
 
 
-class JSONField(_JSONField):
+class JSONField(models.JSONField):
     def __init__(self, *args, **kwargs):
         kwargs.update({'default': dict})
         super().__init__(*args, **kwargs)

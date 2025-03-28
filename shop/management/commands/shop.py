@@ -311,7 +311,9 @@ Usage:
                 yield str(exc)
 
         # the checkout page must be found through the purchase button
-        for plugin in CMSPlugin.objects.filter(plugin_type='ShopProceedButton', language=default_language, placeholder__page__publisher_is_draft=False):
+        for plugin in CMSPlugin.objects.filter(plugin_type='ShopProceedButton', language=default_language,
+                # TODO: placeholder__page__publisher_is_draft=False
+            ):
             link = plugin.get_bound_plugin().glossary.get('link')
             if isinstance(link, dict) and link.get('type') == 'PURCHASE_NOW':
                 break

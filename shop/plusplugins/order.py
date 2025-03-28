@@ -3,10 +3,10 @@ from django.template.loader import select_template, get_template
 from django.template import TemplateDoesNotExist
 from shop.conf import app_settings
 
-from cmsplus.plugin_base import PlusPluginBase
+from cmsplus.plugin_base import PlusPlugin
 
 
-class OrderPluginBase(PlusPluginBase):
+class OrderPluginBase(PlusPlugin):
     render_type = 'not-set'
 
     def get_render_template(self, context, instance, placeholder):

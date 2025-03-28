@@ -75,7 +75,7 @@ over to the merchant's implementation, which may be implemented as:
 .. code-block:: python
 
 	from django.db import models
-	from django.utils.datetime_safe import datetime
+	from datetime import datetime
 	from shop.models import order
 
 	class Order(order.BaseOrder):

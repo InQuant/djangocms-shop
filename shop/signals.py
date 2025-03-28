@@ -6,7 +6,7 @@ from django.conf import settings
 from django.dispatch import Signal
 
 
-customer_recognized = Signal(providing_args=['customer', 'request'])
+customer_recognized = Signal()
 
 if redis and hasattr(settings, 'SESSION_REDIS'):
     redis_con = dict((key, settings.SESSION_REDIS[key]) for key in ['host', 'port', 'db', 'socket_timeout'])

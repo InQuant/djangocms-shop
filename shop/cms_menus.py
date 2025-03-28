@@ -10,10 +10,11 @@ class CatalogMenu(CMSAttachMenu):
 
     def get_nodes(self, request):
         try:
-            if self.instance.publisher_is_draft:
-                productpage_set = self.instance.publisher_public.productpage_set
-            else:
-                productpage_set = self.instance.productpage_set
+            # TODO: if self.instance.publisher_is_draft:
+            #    productpage_set = self.instance.publisher_public.productpage_set
+            # else:
+            #     productpage_set = self.instance.productpage_set
+            productpage_set = self.instance.productpage_set
         except AttributeError:
             return []
         nodes = []

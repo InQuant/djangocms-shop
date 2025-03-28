@@ -4,9 +4,10 @@ from django.template.loader import select_template, get_template
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import format_html
 
+from djangocms_frontend.contrib.icon.forms import IconPickerField
+
 from cmsplus.forms import PlusPluginFormBase, get_style_form_fields
-from cmsplus.cms_plugins.generic.icon import IconField, get_icon_style_paths
-from cmsplus.plugin_base import StylePluginMixin, PlusPluginBase
+from cmsplus.plugin_base import StylePluginMixin, PlusPlugin
 
 from shop.conf import app_settings
 from shop.models.cart import CartModel
@@ -32,10 +33,10 @@ class CheckoutShippingAddressPluginForm(PlusPluginFormBase):
     is_editable = fields.BooleanField(label=_('Is Editable'), initial=True, required=False)
 
     STYLE_CHOICES = 'SHOP_SHIPPING_ADDRESS_STYLES'
-    extra_style, extra_classes, label, extra_css = get_style_form_fields(STYLE_CHOICES)
+    plugin_title, extra_style, extra_css = get_style_form_fields(STYLE_CHOICES)
 
 
-class CheckoutShippingAddressPlugin(StylePluginMixin, PlusPluginBase):
+class CheckoutShippingAddressPlugin(StylePluginMixin, PlusPlugin):
     footnote_html = """
     Manages the current order-checkout shipping address.
     """
@@ -83,10 +84,10 @@ class CheckoutPaymentPluginForm(PlusPluginFormBase):
     is_editable = fields.BooleanField(label=_('Is Editable'), required=False, initial=False)
 
     STYLE_CHOICES = 'SHOP_PAYMENT_STYLES'
-    extra_style, extra_classes, label, extra_css = get_style_form_fields(STYLE_CHOICES)
+    plugin_title, extra_style, extra_css = get_style_form_fields(STYLE_CHOICES)
 
 
-class CheckoutPaymentPlugin(StylePluginMixin, PlusPluginBase):
+class CheckoutPaymentPlugin(StylePluginMixin, PlusPlugin):
     footnote_html = """
     Manages the current order-checkout payment.
     """
@@ -153,20 +154,18 @@ class CheckoutButtonForm(PlusPluginFormBase):
         help_text=_("Select icon position related to content."),
     )
 
-    icon = IconField(required=False)
+    icon = IconPickerField(required=False)
 
     STYLE_CHOICES = 'CHECKOUT_PURCHASE_BUTTON_STYLES'
-    extra_style, extra_classes, label, extra_css = get_style_form_fields(STYLE_CHOICES)
+    plugin_title, extra_style, extra_css = get_style_form_fields(STYLE_CHOICES)
 
 
-class CheckoutButtonPluginBase(StylePluginMixin, PlusPluginBase):
+class CheckoutButtonPluginBase(StylePluginMixin, PlusPlugin):
     module = 'shop'
     form = CheckoutButtonForm
     allow_children = False
-    css_class_fields = StylePluginMixin.css_class_fields + ['button_size', 'button_block']
 
     class Media:
-        css = {'all': ['cmsplus/admin/icon_plugin/css/icon_plugin.css'] + get_icon_style_paths()}
         js = ['cmsplus/admin/icon_plugin/js/icon_plugin.js']
 
     fieldsets = [
