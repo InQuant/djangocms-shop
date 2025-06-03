@@ -1,9 +1,9 @@
 {% load i18n static cms_tags sass_tags sekizai_tags %}
 
-{% addtoblock "css" %}<link href="{% sass_src 'shop/css/list-items.scss' %}" rel="stylesheet" type="text/css" />{% endaddtoblock %}
+{% addtoblock "extra_css" %}<link href="{% sass_src 'shop/css/list-items.scss' %}" rel="stylesheet" type="text/css" />{% endaddtoblock %}
 
-{% addtoblock "js" %}<script src="{% static 'shop/js/cart.js' %}" type="text/javascript"></script>{% endaddtoblock %}
-{% addtoblock "js" %}
+{% addtoblock "extra_js" %}<script src="{% static 'shop/js/cart.js' %}" type="text/javascript"></script>{% endaddtoblock %}
+{% addtoblock "extra_js" %}
 <script type="text/javascript">
     ANGULAR_APP_DEPENDENCIES.push('django.shop.cart');
 </script>
@@ -30,15 +30,15 @@
 			<div class="row align-items-center">
 	{% block shop-cart-item-input %}
 				<div class="col">
-					<div class="form-inline text-nowrap flex-nowrap justify-content-end mb-1 lead">
+					<div class="d-flex text-nowrap flex-nowrap justify-content-end mb-1 lead">
 						<div ng-bind="cart_item.unit_price"></div>
 						<div class="px-1">&times;</div>
 						<input type="number" class="form-control" ng-model="cart_item.quantity" min="1" ng-model-options="{{ EDITCART_NG_MODEL_OPTIONS }}" ng-change="updateCartItem(cart_item)" />
 						<div ng-bind="cart_item.line_total"></div>
 					</div>
 					<div class="row text-muted text-nowrap mb-1" ng-repeat="extra_row in cart_item.extra_rows">
-						<div class="col text-right" ng-bind="extra_row.label"></div>
-						<div class="col text-right" ng-bind="extra_row.amount"></div>
+						<div class="col text-end" ng-bind="extra_row.label"></div>
+						<div class="col text-end" ng-bind="extra_row.amount"></div>
 					</div>
 				</div>
 	{% endblock %}
@@ -47,13 +47,13 @@
 					<div class="row">
 						<div class="col mb-2">
 							<button type="button" class="ml-auto btn btn-sm btn-secondary btn-block shop-item-control" ng-click="deleteCartItem(cart_item)">
-								<span class="fa fa-trash-o mr-2"></span>{% trans "Remove" context "cart" %}
+								<span class="fa fa-trash-o me-2"></span>{% trans "Remove" context "cart" %}
 							</button>
 						</div>
 		{% if shop_watch_list_url %}
 						<div class="col mb-2">
 							<button type="button" class="ml-auto btn btn-sm btn-info btn-block shop-item-control" ng-click="watchCartItem(cart_item)">
-								<span class="fa fa-heart-o mr-2"></span>{% trans "Watch Item" context "cart" %}
+								<span class="fa fa-heart-o me-2"></span>{% trans "Watch Item" context "cart" %}
 							</button>
 						</div>
 		{% endif %}
@@ -69,20 +69,20 @@
 	<div class="row">
 		<div class="col-12 col-md-6 order-md-last border-top">
 			<div class="row py-2 lead">
-				<div class="col text-right text-nowrap">
+				<div class="col text-end text-nowrap">
 					{% trans "Subtotal" context "cart" %}
 				</div>
-				<div class="col text-right text-nowrap" ng-bind="cart.subtotal">
+				<div class="col text-end text-nowrap" ng-bind="cart.subtotal">
 					<!-- Subtotal -->
 				</div>
 			</div>
 			<div class="row py-2" ng-repeat="extra_row in cart.extra_rows">
-				<div class="col text-right text-nowrap" ng-bind="extra_row.label"></div>
-				<div class="col text-right text-nowrap" ng-bind="extra_row.amount"></div>
+				<div class="col text-end text-nowrap" ng-bind="extra_row.label"></div>
+				<div class="col text-end text-nowrap" ng-bind="extra_row.amount"></div>
 			</div>
 			<div class="row py-2 shop-double-border lead font-weight-bold">
-				<div class="col text-right text-nowrap">{% trans "Total" context "cart" %}</div>
-				<div class="col text-right text-nowrap" ng-bind="cart.total">
+				<div class="col text-end text-nowrap">{% trans "Total" context "cart" %}</div>
+				<div class="col text-end text-nowrap" ng-bind="cart.total">
 					<!-- Total -->
 				</div>
 			</div>

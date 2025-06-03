@@ -20,12 +20,12 @@
 			{% endif %}
 		</div>
 		<div class="col-6">
-			<div class="row text-nowrap flex-nowrap lead text-right">
+			<div class="row text-nowrap flex-nowrap lead text-end">
 				<div class="col-6">{{ item.unit_price }}</div>
 				<div class="col-6">{{ item.line_total }}</div>
 			</div>
 			{% for _, extra_row in item.extra.rows %}
-			<div class="row text-muted text-nowrap flex-nowrap text-right">
+			<div class="row text-muted text-nowrap flex-nowrap text-end">
 				<div class="col-6">{{ extra_row.label }}</div>
 				<div class="col-6">{{ extra_row.amount }}</div>
 			</div>
@@ -39,22 +39,22 @@
 	<div class="row dontsplit">
 		<div class="col-6 border-top offset-6">
 			<div class="row py-2 lead">
-				<div class="col-6 text-right text-nowrap">
+				<div class="col-6 text-end text-nowrap">
 					{% trans "Subtotal" %}
 				</div>
-				<div class="col-6 text-right text-nowrap">
+				<div class="col-6 text-end text-nowrap">
 					{{ order.subtotal }}
 				</div>
 			</div>
 		{% for key, extra_row in order.extra.rows %}
 			<div class="row py-2">
-				<div class="col-6 text-right text-nowrap">{{ extra_row.label }}</div>
-				<div class="col-6 text-right text-nowrap">{{ extra_row.amount }}</div>
+				<div class="col-6 text-end text-nowrap">{{ extra_row.label }}</div>
+				<div class="col-6 text-end text-nowrap">{{ extra_row.amount }}</div>
 			</div>
 		{% endfor %}
 			<div class="row py-2 shop-double-border lead font-weight-bold">
-				<div class="col-6 text-right text-nowrap">{% trans "Total" %}</div>
-				<div class="col-6 text-right text-nowrap">{{ order.total }}</div>
+				<div class="col-6 text-end text-nowrap">{% trans "Total" %}</div>
+				<div class="col-6 text-end text-nowrap">{{ order.total }}</div>
 			</div>
 		</div>
 	</div>

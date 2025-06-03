@@ -4,8 +4,8 @@ from django.template.loader import select_template, get_template
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import mark_safe
 
-from cmsplus.forms import PlusPluginFormBase, get_style_form_fields
-from cmsplus.plugin_base import StylePluginMixin, PlusPlugin
+from cmsplus.forms import PlusPluginFormBase
+from cmsplus.plugin_base import PlusPlugin
 
 from shop.conf import app_settings
 from shop.models.cart import CartModel
@@ -28,11 +28,7 @@ class ShopCartPluginForm(PlusPluginFormBase):
         help_text=_("Shall the cart be editable or a static summary?"),
     )
 
-    STYLE_CHOICES = 'SHOP_CART_STYLES'
-    plugin_title, extra_style, extra_css = get_style_form_fields(STYLE_CHOICES)
-
-
-class ShopCartPlugin(StylePluginMixin, PlusPlugin):
+class ShopCartPlugin(PlusPlugin):
     footnote_html = """
     Shows the customers current shopping cart.
     """

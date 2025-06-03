@@ -12,7 +12,7 @@
 <li class="nav-item{% if has_dropdown %} dropdown{% endif %} {{ item_class }}" {% if has_dropdown %}uib-dropdown is-open="dropdownOpen"{% else %}uib-tooltip="{{ tooltip }}" tooltip-placement="left"{% endif %} shop-dropdown-cart="{{ endpoint }}">
 	<a class="nav-link"{% if shop_cart_url %} href="{{ shop_cart_url }}"{% endif %} title="{{ tooltip }}">
 	{% block carticon %}
-		<i class="fa fa-shopping-cart fa-fw mr-1"></i>
+		<i class="fa fa-shopping-cart fa-fw me-1"></i>
 		<ng-pluralize count="cart.num_items" when="{'1': '{% trans "1 Item" context "cart icon" %}', 'other': '{% trans "{} Items" context "cart icon" %}'}"></ng-pluralize>
 	{% endblock %}
 	</a>
@@ -25,7 +25,7 @@
 				<div ng-bind-html="cartItem.summary.media"></div>
 				<div class="d-flex flex-row">
 					<div class="w-50 text-muted">{{ cartItem.quantity }} &times; {{ cartItem.unit_price }}</div>
-					<div class="w-50 text-right font-weight-bold">{{ cartItem.line_total }}</div>
+					<div class="w-50 text-end font-weight-bold">{{ cartItem.line_total }}</div>
 				</div>
 			</div>
 			{% endverbatim %}
@@ -36,7 +36,7 @@
 		{% endblock dropdown-menu %}
 		<div class="dropdown-item d-flex lead">
 			<div class="w-50 text-muted">{% trans "Subtotal" %}:</div>&nbsp;
-			<div class="w-50 text-right font-weight-bold" ng-bind="cart.subtotal"></div>
+			<div class="w-50 text-end font-weight-bold" ng-bind="cart.subtotal"></div>
 		</div>
 	</div>
 	{% endif %}

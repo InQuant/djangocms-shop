@@ -4,10 +4,9 @@ from django.template.loader import select_template, get_template
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import format_html
 
-from djangocms_frontend.contrib.icon.forms import IconPickerField
-
-from cmsplus.forms import PlusPluginFormBase, get_style_form_fields
-from cmsplus.plugin_base import StylePluginMixin, PlusPlugin
+from cmsplus.forms import PlusPluginFormBase
+from cmsplus.plugin_base import PlusPlugin
+from cmsplus.cms_plugins.bootstrap.icon import IconField
 
 from shop.conf import app_settings
 from shop.models.cart import CartModel
@@ -33,10 +32,9 @@ class CheckoutShippingAddressPluginForm(PlusPluginFormBase):
     is_editable = fields.BooleanField(label=_('Is Editable'), initial=True, required=False)
 
     STYLE_CHOICES = 'SHOP_SHIPPING_ADDRESS_STYLES'
-    plugin_title, extra_style, extra_css = get_style_form_fields(STYLE_CHOICES)
 
 
-class CheckoutShippingAddressPlugin(StylePluginMixin, PlusPlugin):
+class CheckoutShippingAddressPlugin(PlusPlugin):
     footnote_html = """
     Manages the current order-checkout shipping address.
     """
@@ -84,10 +82,9 @@ class CheckoutPaymentPluginForm(PlusPluginFormBase):
     is_editable = fields.BooleanField(label=_('Is Editable'), required=False, initial=False)
 
     STYLE_CHOICES = 'SHOP_PAYMENT_STYLES'
-    plugin_title, extra_style, extra_css = get_style_form_fields(STYLE_CHOICES)
 
 
-class CheckoutPaymentPlugin(StylePluginMixin, PlusPlugin):
+class CheckoutPaymentPlugin(PlusPlugin):
     footnote_html = """
     Manages the current order-checkout payment.
     """
@@ -143,24 +140,7 @@ class CheckoutButtonForm(PlusPluginFormBase):
         help_text=_("Use button block option (span left to right)?")
     )
 
-    icon_position = fields.ChoiceField(
-        label=_("Icon position"),
-        choices=[
-            ('icon-top', _("Icon top")),
-            ('icon-right', _("Icon right")),
-            ('icon-left', _("Icon left")),
-        ],
-        initial='icon-right',
-        help_text=_("Select icon position related to content."),
-    )
-
-    icon = IconPickerField(required=False)
-
-    STYLE_CHOICES = 'CHECKOUT_PURCHASE_BUTTON_STYLES'
-    plugin_title, extra_style, extra_css = get_style_form_fields(STYLE_CHOICES)
-
-
-class CheckoutButtonPluginBase(StylePluginMixin, PlusPlugin):
+class CheckoutButtonPluginBase(PlusPlugin):
     module = 'shop'
     form = CheckoutButtonForm
     allow_children = False
@@ -168,37 +148,8 @@ class CheckoutButtonPluginBase(StylePluginMixin, PlusPlugin):
     class Media:
         js = ['cmsplus/admin/icon_plugin/js/icon_plugin.js']
 
-    fieldsets = [
-        (None, {
-            'fields': ('button_text', ),
-        }),
-        (_('Styles'), {
-            'fields': (
-                ('extra_style', 'button_size', 'button_block'),
-                'extra_classes',
-                'label',
-            ),
-        }),
-        (_('Icon settings'), {
-            'classes': ('collapse',),
-            'fields': (
-                'icon_position', 'icon',
-            )
-        }),
-    ]
-
     def render(self, context, instance, placeholder):
-        icon_pos = instance.glossary.get('icon_position')
-        icon = instance.glossary.get('icon')
-
-        if icon:
-            if icon_pos == 'icon-top':
-                context['icon_top'] = format_html('<i class="{}"></i><br>'.format(icon))
-            elif icon_pos == 'icon-left':
-                context['icon_left'] = format_html('<i class="{}"></i>&nbsp;&nbsp;'.format(icon))
-            elif icon_pos == 'icon-right':
-                context['icon_right'] = format_html('&nbsp; <i class="{}"></i>'.format(icon))
-
+        instance.add_classes('btn')
         try:
             context['cart'] = CartModel.objects.get_from_request(context['request'])
         except Exception:

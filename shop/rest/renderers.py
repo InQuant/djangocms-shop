@@ -83,6 +83,7 @@ class CMSPageRenderer(TemplateContextMixin, renderers.TemplateHTMLRenderer):
 
         # set edit_mode, so that otherwise invisible placeholders can be edited inline
         # TODO: edit_mode = getattr(request.current_page, 'publisher_is_draft', False)
+        edit_mode = True
 
         template_names = [request.current_page.get_template()]
         template = self.resolve_template(template_names)

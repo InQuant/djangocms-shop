@@ -17,7 +17,7 @@ class JSONSerializerField(serializers.Field):
     """
     Serializer field which transparently bypasses its object instead of serializing/deserializing.
     """
-    def __init__(self, encoder=None, **kwargs):
+    def __init__(self, encoder=None, decoder=None, **kwargs):
         super().__init__(**kwargs)
 
     def to_representation(self, obj):

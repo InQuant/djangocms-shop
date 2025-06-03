@@ -1,11 +1,11 @@
 {# Fallback template if none is found in "myshop/products/print-<product_model>-media.html" #}
 {# It is used to render the figure in each line item when printing an order or delivery-note #}
-<div class="media">
+<div class="d-flex">
 	<a href="{{ product.get_absolute_url }}">
 {% block print-image %}
 {% endblock %}
 	</a>
-	<div class="media-body">
+	<div class="flex-grow-1">
 		<h5 class="mt-0"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h5>
 		{{ product.caption|truncatewords_html:30 }}
 	</div>

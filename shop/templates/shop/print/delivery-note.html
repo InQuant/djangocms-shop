@@ -20,12 +20,12 @@
 			{% endif %}
 		</div>
 		<div class="col-6">
-			<div class="row text-nowrap flex-nowrap lead text-right">
+			<div class="row text-nowrap flex-nowrap lead text-end">
 				<div class="col-6">{{ item.unit_price }}</div>
 				<div class="col-6">{{ item.line_total }}</div>
 			</div>
 			{% for _, extra_row in item.extra.rows %}
-			<div class="row text-muted text-nowrap flex-nowrap text-right">
+			<div class="row text-muted text-nowrap flex-nowrap text-end">
 				<div class="col-6">{{ extra_row.label }}</div>
 				<div class="col-6">{{ extra_row.amount }}</div>
 			</div>

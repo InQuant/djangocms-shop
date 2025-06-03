@@ -32,6 +32,7 @@ class OrderListPlugin(OrderPluginBase):
     allow_children = False
     cache = False
     render_type = 'list'
+    render_template = 'shop/order/list.html'
 
 
 class OrderDetailPlugin(OrderPluginBase):
@@ -43,3 +44,4 @@ class OrderDetailPlugin(OrderPluginBase):
     allow_children = False
     cache = False
     render_type = 'detail'
+    render_template = 'shop/order/detail.html'

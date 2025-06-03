@@ -1,4 +1,5 @@
 from decimal import Decimal
+from tkinter import W
 
 from django.core.exceptions import ValidationError
 from django import forms
@@ -87,16 +88,19 @@ class MoneyField(models.DecimalField):
 
     def to_python(self, value):
         if isinstance(value, AbstractMoney):
-            return value
+            return value.as_decimal()
         if value is None:
-            return self.Money('NaN')
-        value = super().to_python(value)
-        return self.Money(value)
+            return self.Decimal('NaN')
+        return super().to_python(value)
 
     def get_prep_value(self, value):
-        # force to type Decimal by using grandparent super
-        value = super(models.DecimalField, self).get_prep_value(value)
-        return super().to_python(value)
+        if isinstance(value, AbstractMoney):
+            return value.as_decimal()
+        elif value is None:
+            return None
+        elif isinstance(value, float):
+            value = Decimal(str(value))
+        return super().get_prep_value(value)
 
     def from_db_value(self, value, expression, connection):
         if value is None:
@@ -106,8 +110,14 @@ class MoneyField(models.DecimalField):
         return self.Money(value)
 
     def get_db_prep_save(self, value, connection):
-        if isinstance(value, Decimal) and value.is_nan():
-            return None
+        if isinstance(value, AbstractMoney):
+            value = value.as_decimal()
+        elif isinstance(value, float):
+            value = Decimal(str(value))
+        elif value is None:
+            return Decimal(None)
+        elif isinstance(value, Decimal) and value.is_nan():
+            return Decimal(None)
         return super().get_db_prep_save(value, connection)
 
     def get_prep_lookup(self, lookup_type, value):

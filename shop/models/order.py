@@ -87,9 +87,9 @@ class OrderManager(models.Manager):
         """
         if not hasattr(self, '_summary_url'):
             try:  # via CMS pages
-                page = Page.objects.public().get(reverse_id='shop-order')
+                page = Page.objects.get(reverse_id='shop-order')
             except Page.DoesNotExist:
-                page = Page.objects.public().filter(application_urls='OrderApp').first()
+                page = Page.objects.filter(application_urls='OrderApp').first()
             if page:
                 self._summary_url = page.get_absolute_url(language=get_current_language())
             else:

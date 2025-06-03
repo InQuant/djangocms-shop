@@ -1,5 +1,4 @@
 from django.utils import timezone
-from django.views.decorators.cache import never_cache
 from django.utils.translation import gettext_lazy as _
 from rest_framework import generics, mixins
 from rest_framework.exceptions import NotFound, MethodNotAllowed
@@ -93,7 +92,6 @@ class OrderView(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateM
             allowed_methods.remove('POST')
         return allowed_methods
 
-    @never_cache
     def get(self, request, *args, **kwargs):
         if self.many:
             return self.list(request, *args, **kwargs)

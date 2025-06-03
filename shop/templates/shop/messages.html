@@ -11,9 +11,9 @@
 <div class="mx-auto d-flex flex-column">
 	<div ng-repeat="message in djangoMessages" class="toast fade" ng-class="appear(message)" role="alert" aria-live="assertive" aria-atomic="true" delay="{{ message.delay }}">
 		<div class="toast-header" ng-class="alertLevel(message)">
-			<i class="fa mr-2" ng-class="alertIcon(message)" aria-hidden="true"></i>
+			<i class="fa me-2" ng-class="alertIcon(message)" aria-hidden="true"></i>
 			<strong class="mr-auto">{{ message.heading }}</strong>
-			<button type="button" class="ml-2 mb-1 close" ng-click="close(message)" aria-label="{% trans 'Close' %}">
+			<button type="button" class="ms-2 mb-1 close" ng-click="close(message)" aria-label="{% trans 'Close' %}">
 				<span aria-hidden="true" ng-click="">&times;</span>
 			</button>
 		</div>

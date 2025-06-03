@@ -36,6 +36,8 @@ class CustomerQuerySet(models.QuerySet):
         """
         opts = self.model._meta
         lookup_kwargs = {}
+        if not args and 'args' in kwargs and 'kwargs' in kwargs:
+            return super()._filter_or_exclude(negate, *args, **kwargs)
         for key, lookup in kwargs.items():
             try:
                 field_name = key[:key.index('__')]
@@ -53,6 +55,7 @@ class CustomerQuerySet(models.QuerySet):
                     get_user_model()._meta.get_field(field_name)
                     lookup_kwargs['user__' + key] = lookup
                 except FieldDoesNotExist:
+                    continue
                     raise fdne
                 except Exception as othex:
                     raise othex

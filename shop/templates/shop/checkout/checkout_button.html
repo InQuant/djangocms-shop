@@ -1,8 +1,8 @@
 {% load cms_tags %}
 <div class="d-flex justify-content-end py-3">
   <a href="{% page_url "shop-cart-checkout" %}"
-    class="btn {{ instance.css_classes }}{% if cart.is_empty %} disabled{% endif %}" role="button"
+    {{ instance.get_attributes }} ng-disabled="is_disabled('{{ cart.is_empty }}')" role="button"
     {% if instance.inline_styles %}style="{{ instance.inline_styles }}"{% endif %}>
-    {{ icon_top }}{{ icon_left }}{{ instance.glossary.button_text }}{{ icon_right }}
+    {{ instance.glossary.button_text }}<i class="bi bi-chevron-double-right"></i>
   </a>
 </div>

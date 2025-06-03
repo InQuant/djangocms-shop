@@ -1,6 +1,6 @@
 {% load i18n static cms_tags sass_tags sekizai_tags shop_tags %}
 
-{% addtoblock "css" %}<link href="{% sass_src 'shop/css/list-items.scss' %}" rel="stylesheet" type="text/css" />{% endaddtoblock %}
+{% addtoblock "extra_css" %}<link href="{% sass_src 'shop/css/list-items.scss' %}" rel="stylesheet" type="text/css" />{% endaddtoblock %}
 
 {% block shop-order-title %}
 <h4>{% page_attribute "page_title" %}</h4>
@@ -21,7 +21,7 @@
 <div class="shop-list-item row border-top py-2">
 	<div class="col-6 col-lg-auto order-1">
     {% block shop-order-first-column %}
-    <div><a class="mr-lg-5 mr-3 lead text-nowrap" href="{{ order.url }}">{{ order.number }}</a></div>
+    <div><a class="me-lg-5 me-3 lead text-nowrap" href="{{ order.url }}">{{ order.number }}</a></div>
     <div><small class="text-nowrap text-muted">{{ order.created_at|date:"Y-m-d H:i" }}</small></div>
     {% endblock %}
 	</div>
@@ -30,7 +30,7 @@
     <div>{{ item.quantity }} x {{ item.product_name }}</div>
     {% endfor %}
 	</div>
-	<div class="col-6 order-2 col-lg-auto text-right text-nowrap">
+	<div class="col-6 order-2 col-lg-auto text-end text-nowrap">
     <div class="badge badge-primary">{{ order.status }}</div>
     <div class="lead text-nowrap">{{ order.total }}</div>
 	</div>

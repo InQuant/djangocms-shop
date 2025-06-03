@@ -15,7 +15,7 @@
 {% block search-results-head %}
 	<div class="row lead text-muted py-1" ng-if="search_data.count>0">
 		<div class="col-7" ng-cloak>{% trans "{{ search_data.count }} matching products found" %}</div>
-		<div class="col-3 text-right">{% trans "Base Price" %}</div>
+		<div class="col-3 text-end">{% trans "Base Price" %}</div>
 	</div>
 	<div class="row lead text-muted" ng-if="search_data.count==0">
 		<div class="col" ng-cloak>{% trans "Searching for <em>{{ searchQuery }}</em> has revealed nothing." %}</div>
@@ -25,7 +25,7 @@
 {% block search-results-body %}
 	<div class="shop-list-item row border-top py-3" ng-repeat="result in search_data.results">
 		<div class="col-7" ng-bind-html="result.media"></div>
-		<div class="col-3 text-right text-nowrap" ng-bind="result.price"></div>
+		<div class="col-3 text-end text-nowrap" ng-bind="result.price"></div>
 		<div class="col-2">
 			<a class="btn btn-primary btn-sm" ng-href="{% verbatim %}{{ result.product_url }}{% endverbatim %}">{% trans "Details" %} <i class="d-none d-md-inline">&hellip;</i></a>
 		</div>
