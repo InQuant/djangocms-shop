@@ -49,6 +49,8 @@ class CartItemManager(models.Manager):
         Use this method to fetch items for shopping from the cart. It rearranges the result set
         according to the defined modifiers.
         """
+        if not cart.pk:
+            return self.none()
         cart_items = self.filter(cart=cart, quantity__gt=0).order_by('updated_at')
         for modifier in cart_modifiers_pool.get_all_modifiers():
             cart_items = modifier.arrange_cart_items(cart_items, request)
@@ -59,6 +61,8 @@ class CartItemManager(models.Manager):
         Use this method to fetch items from the watch list. It rearranges the result set
         according to the defined modifiers.
         """
+        if not cart.pk:
+            return self.none()
         watch_items = self.filter(cart=cart, quantity=0)
         for modifier in cart_modifiers_pool.get_all_modifiers():
             watch_items = modifier.arrange_watch_items(watch_items, request)
