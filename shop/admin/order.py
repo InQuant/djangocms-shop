@@ -121,7 +121,7 @@ class BaseOrderAdmin(FSMTransitionMixin, admin.ModelAdmin):
               'customer',
               ('get_subtotal', 'get_total', 'get_outstanding_amount', 'is_fully_paid'),
               'render_as_html_extra', 'stored_request']
-    actions = None
+    actions = ['delete_selected']
     change_form_template = 'shop/admin/change_form.html'
 
     def __init__(self, *args, **kwargs):
@@ -156,7 +156,7 @@ class BaseOrderAdmin(FSMTransitionMixin, admin.ModelAdmin):
         return False
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return True
 
     def render_as_html_extra(self, obj):
         return self.extra_template.render(obj.extra)
